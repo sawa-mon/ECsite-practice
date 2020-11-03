@@ -4,7 +4,6 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { makeStyles } from '@material-ui/core';
 import {storage} from "../../firebase/index";
 import ImagePreview from "./ImagePreview";
-import { DeleteTwoTone } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   icon: {

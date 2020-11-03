@@ -1,10 +1,25 @@
 import { db, FirebaseTimestamp } from "../../firebase"
 import {push} from "connected-react-router";
+import {fetchProductsAction} from "./actions";
 
 
 const productsRef = db.collection('products')
 
-export const saveProduct = (name, description, category, gender, price, images) => {
+export const fetchProducts = () => {
+  return async (dispatch) => {
+    productsRef.orderBy('updated_at', 'desc').get()
+    .then(snapshots => {
+      const productList = []
+      snapshots.forEach(snapshot => {
+        const product = snapshot.data();
+        productList.push(product)
+      })
+      dispatch(fetchProductsAction(productList))
+    })
+  }
+}
+
+export const saveProduct = (id, name, description, category, gender, price, images, sizes) => {
   return async (dispatch) => {
     const timestamp = FirebaseTimestamp.now()
 
@@ -15,15 +30,18 @@ export const saveProduct = (name, description, category, gender, price, images) 
       images: images,
       name: name,
       price: parseInt(price, 10),
-      updated_at: timestamp
+      sizes: sizes,
+      updated_at: timestamp,
     }
 
-    const ref = productsRef.doc();
-    const id = ref.id
-    data.id = id
-    data.created_at = timestamp
+    if(id === "") {
+      const ref = productsRef.doc();
+      id = ref.id
+      data.id = id
+      data.created_at = timestamp
+    }
 
-    return productsRef.doc(id).set(data)
+    return productsRef.doc(id).set(data, {merge: true}) //更新された部分だけを更新するためにオブジェクトの{marge: true}をする
     .then(() => {
       dispatch(push('/'))
     }).catch((error) => {
