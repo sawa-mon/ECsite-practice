@@ -24,6 +24,8 @@ const HeaderMenus = (props) => {
         const product = change.doc.data();
         const changeType = change.type;
 
+        console.log(snapshots);
+
         switch (changeType) {
           case 'added': //通知タイプがaddedの時
             productsInCart.push(product);

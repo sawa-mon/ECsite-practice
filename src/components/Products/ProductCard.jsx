@@ -6,13 +6,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import NoImage from '../../assets/img/src/no_image.png';
 import {push} from 'connected-react-router';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MOreVertIcon from '@material-ui/icons/MoreVert';
 import {deleteProduct} from '../../reducks/products/operations';
-import {getUserId} from "../../reducks/users/selectors";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,8 +61,6 @@ const ProductCard = (props) => {
   const images = (props.images.length > 0) ? props.images : [{path: NoImage}];
   const price = props.price.toLocaleString();
 
-  const uid = getUserId(selector);
-
   
   return(
     <Card className={classes.root}>
@@ -82,11 +80,9 @@ const ProductCard = (props) => {
           </Typography>
         </div>
 
-        {users.uid === "5BUhE1WSafZFB091ivYIl1KyvyJ3"(
         <IconButton onClick={handleClick}>
           <MOreVertIcon />
         </IconButton>
-        )}
 
           <Menu
             anchorEl={anchorEl}

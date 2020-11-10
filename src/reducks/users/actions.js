@@ -19,6 +19,7 @@ export const signInAction = (userState) => {
   return {
     type:"SIGN_IN",
     payload: {
+      cart: [],
       isSignedIn: true,
       role: userState.role,
       uid: userState.uid,

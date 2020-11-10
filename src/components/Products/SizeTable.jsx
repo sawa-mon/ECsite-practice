@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -22,7 +22,13 @@ const SizeTable = (props) => {
 
   const sizes = props.sizes;
 
-  // const sizeQuantity = 
+  const [count, setCount] = useState(0);
+
+  const inputCountEl = (e) => {
+    const number = e.target.value;
+    setCount(number);
+  }
+
   
   return (
     <TableContainer>
@@ -36,10 +42,14 @@ const SizeTable = (props) => {
                 </TableCell>
                 <TableCell>
                   残り{size.quantity}点
+
+                  <input type="number" onChange ={inputCountEl}/>
+
+                  
                 </TableCell>
                 <TableCell className={classes.iconCell}>
                   {size.quantity > 0 ? (
-                    <IconButton onClick={() => props.addProduct(size.size)}>
+                    <IconButton onClick={() => props.addProduct(size.size,count)}>
                       <ShoppingCartIcon />
                     </IconButton>
                   ) : (

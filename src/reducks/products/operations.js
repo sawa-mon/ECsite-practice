@@ -38,6 +38,9 @@ export const fetchProducts = (gender, category) => {
 export const orderProduct = (productsInCart, amount) => {
   return async (dispatch, getState) => {
     const uid = getState().users.uid;
+    // const orderQuantity = getState().users.cart;
+
+
     const userRef = db.collection('users').doc(uid);
     const timestamp = FirebaseTimestamp.now()
 
@@ -46,9 +49,12 @@ export const orderProduct = (productsInCart, amount) => {
 
     const batch = db.batch();
 
+
+
     for (const product of productsInCart) {
       const snapshot = await productsRef.doc(product.productId).get()
       const sizes = snapshot.data().sizes;
+      const orderQuantity = product.quantity;
 
       const updatedSizes = sizes.map(size => {
         if(size.size === product.size) {
@@ -58,7 +64,7 @@ export const orderProduct = (productsInCart, amount) => {
           }
           return {
             size: size.size,
-            quantity: size.quantity - 1
+            quantity: size.quantity - orderQuantity,
           }
         } else {
           return size
@@ -74,7 +80,7 @@ export const orderProduct = (productsInCart, amount) => {
 
       batch.update(
         productsRef.doc(product.productId),
-          {size: updatedSizes}
+          {sizes: updatedSizes}
       );
 
       batch.delete(

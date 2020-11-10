@@ -35,6 +35,8 @@ const CartListItem = (props) => {
   const name = props.product.name;
   const price = props.product.price.toLocaleString();
   const size = props.product.size;
+  const quantity = props.product.quantity
+  const count = props.product.count
 
   const removeProductFromCart = (id) => {
     return db.collection('users').doc(uid)
@@ -55,6 +57,9 @@ const CartListItem = (props) => {
           />
           <ListItemText
             primary={"¥" + price}
+          />
+          <ListItemText
+            primary={quantity + "個"}
           />
         </div>
         <IconButton onClick={() => removeProductFromCart(props.product.cartId)}>
