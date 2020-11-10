@@ -21,6 +21,8 @@ const SizeTable = (props) => {
   const classes = useStyles();
 
   const sizes = props.sizes;
+
+  // const sizeQuantity = 
   
   return (
     <TableContainer>

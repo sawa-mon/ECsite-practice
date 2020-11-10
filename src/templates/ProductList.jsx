@@ -9,9 +9,13 @@ const ProductList = () => {
   const selector = useSelector((state) => state);
   const products = getProducts(selector);
 
+  const query = selector.router.location.search;
+  const gender = /^\?gender=/.test(query) ? query.split('?gender=')[1] : ""; //trueの場合は、genderの後の値を取得する
+  const category = /^\?category=/.test(query) ? query.split('?category=')[1] : "";
+
   useEffect(() => {
-    dispatch(fetchProducts())
-  }, []);
+    dispatch(fetchProducts(gender, category))
+  }, [query]);
 
   return(
     <section className="c-section-wrapin">
@@ -29,4 +33,4 @@ const ProductList = () => {
   )
 }
 
-export default ProductList
+export default ProductList;

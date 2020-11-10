@@ -12,6 +12,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MOreVertIcon from '@material-ui/icons/MoreVert';
 import {deleteProduct} from '../../reducks/products/operations';
+import {getUserId} from "../../reducks/users/selectors";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,6 +61,8 @@ const ProductCard = (props) => {
   const images = (props.images.length > 0) ? props.images : [{path: NoImage}];
   const price = props.price.toLocaleString();
 
+  const uid = getUserId(selector);
+
   
   return(
     <Card className={classes.root}>
@@ -77,9 +81,13 @@ const ProductCard = (props) => {
             ¥{price}
           </Typography>
         </div>
+
+        {users.uid === "5BUhE1WSafZFB091ivYIl1KyvyJ3"(
         <IconButton onClick={handleClick}>
           <MOreVertIcon />
         </IconButton>
+        )}
+
           <Menu
             anchorEl={anchorEl}
             keepMounted

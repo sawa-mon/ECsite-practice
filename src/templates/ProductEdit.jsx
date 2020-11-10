@@ -19,6 +19,7 @@ const ProductEdit = () => {
   const [name, setName] = useState(""),
         [description, setDescription] = useState(""),
         [category, setCategory] = useState(""),
+        [categories, setCategories] = useState([]),
         [gender, setGender] = useState(""),
         [images, setImages] = useState([]),
         [price, setPrice] = useState(""),
@@ -36,11 +37,6 @@ const ProductEdit = () => {
     setPrice(event.target.value)
   }, [setPrice]);
 
-  const categories = [
-    {id:"tops", name:"トップス"},
-    {id:"shirts", name:"シャツ"},
-    {id:"pants", name:"パンツ"},
-  ];
 
   const genders = [
     {id:"all", name:"all"},
@@ -63,6 +59,23 @@ const ProductEdit = () => {
     }
   }, [id]);
 
+  useEffect(() => {  //データベースの商品情報から引っ張ってきて反映する
+    db.collection('categories')
+    .orderBy('order', 'asc') //昇順で並べ替える
+    .get()
+    .then(snapshots => {
+      const list = []
+      snapshots.forEach(snapshots => {
+        const data = snapshots.data()
+        list.push({
+          id: data.id,
+          name: data.name
+        })
+      })
+      setCategories(list)
+    })
+  }, []);
+  
 
   return(
     <section>

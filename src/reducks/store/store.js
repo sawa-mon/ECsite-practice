@@ -15,7 +15,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function createStore(history) {
   return reduxCreateStore(
     combineReducers({
-      products: ProductsReducer,　
+      products: ProductsReducer,
       router: connectRouter(history),
       users: UsersReducer
     }),

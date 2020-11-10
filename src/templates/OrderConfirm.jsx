@@ -5,7 +5,8 @@ import {makeStyles} from "@material-ui/styles";
 import {CartListItem} from "../components/Products";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import {PrimaryButton, TextDetail} from "../components/UIkit";
+import {GreyButton, PrimaryButton, TextDetail} from "../components/UIkit";
+import {push} from 'connected-react-router';
 import { orderProduct } from '../reducks/products/operations';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,26 +48,36 @@ const OrderConfirm = () => {
     dispatch(orderProduct(productsInCart, totalFee))
   },[productsInCart, totalFee]);
 
+  const backToHome = useCallback(() => {
+    dispatch(push('/'))
+  },[])
+
   return (
     <section class="c-section-wrapin">
+      {productsInCart.length > 0 && (
       <h2 className="u-text__headline">注文の確認</h2>
-      <div className="p-grid__row">
-        <div className={classes.detailBox}>
-          <List>
-            {productsInCart.length > 0 && (
-              productsInCart.map(product => <CartListItem product={product} key={product.cartId}/>)
-            )}
-          </List>
-        </div>
-        <div className={classes.orderBox}>
-          <TextDetail label={"商品合計"} value={"¥" + subtotal.toLocaleString()} />
-          <TextDetail label={"消費税"} value={"¥" + tax} />
-          <TextDetail label={"送料"} value={ "¥" + shippingFee.toLocaleString()} />
-          <Divider />
-          <TextDetail label={"合計(税込)"} value={"¥" + totalFee.toLocaleString()} />
-          <PrimaryButton label={"注文する"} onClick={order} />
-        </div>
+      )}
+      {productsInCart.length > 0 && (
+        <div className="p-grid__row">
+          <div className={classes.detailBox}>
+            <List>
+              {productsInCart.length > 0 && (
+                productsInCart.map(product => <CartListItem product={product} key={product.cartId}/>)
+              )}
+            </List>
+          </div>
+          <div className={classes.orderBox}>
+            <TextDetail label={"商品合計"} value={"¥" + subtotal.toLocaleString()} />
+            <TextDetail label={"消費税"} value={"¥" + tax.toFixed()} />
+            <TextDetail label={"送料"} value={ "¥" + shippingFee.toLocaleString()} />
+            <Divider />
+            <TextDetail label={"合計(税込)"} value={"¥" + totalFee.toFixed().toLocaleString()} />
+            <PrimaryButton label={"注文する"} onClick={order} />
+          </div>
       </div>
+      )}
+      <div className="module-spacer--extra-extra-small" />
+      <GreyButton label={"ショッピングを続ける"} onClick={backToHome} />
     </section>
   )
 }

@@ -44,8 +44,6 @@ const HeaderMenus = (props) => {
     return() => unsubscribe()
   },[]);
 
-  console.log(productsInCart.length);
-  
   return (
     <>
       <IconButton onClick={() => dispatch(push('/cart'))}>
