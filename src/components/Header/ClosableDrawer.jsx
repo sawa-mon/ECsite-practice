@@ -1,85 +1,114 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import React, { useState, useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Divider from "@material-ui/core/Divider";
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import {makeStyles} from "@material-ui/styles";
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import AddCirclreIcon from '@material-ui/icons/AddCircle';
-import HistoryIcon from '@material-ui/icons/History';
-import PersonIcon from '@material-ui/icons/Person';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {TextInput} from '../UIkit/index';
-import {push} from 'connected-react-router';
-import {signOut} from '../../reducks/users/operations';
-import {db} from '../../firebase/index';
-
-
+import { makeStyles } from "@material-ui/styles";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import AddCirclreIcon from "@material-ui/icons/AddCircle";
+import HistoryIcon from "@material-ui/icons/History";
+import PersonIcon from "@material-ui/icons/Person";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { TextInput } from "../UIkit/index";
+import { push } from "connected-react-router";
+import { signOut } from "../../reducks/users/operations";
+import { db } from "../../firebase/index";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       flexShrink: 0,
-      width: 256
-    }
+      width: 256,
+    },
   },
   toolbar: theme.mixins.toolbar,
-  drowerPaper: {
-    width: 256
+  drawerPaper: {
+    width: 256,
   },
   searchField: {
-    alignItems: 'center',
-    display: 'flex',
-    marginLeft: 32
-  }
+    alignItems: "center",
+    display: "flex",
+    marginLeft: 32,
+  },
 }));
 
 const ClosableDrawer = (props) => {
   const classes = useStyles();
-  const {container} = props;
+  const { container } = props;
   const dispatch = useDispatch();
 
   const [keyword, setKeyword] = useState("");
 
-  const inputKeyword = useCallback((event) => {
-    setKeyword(event.target.value)
-  }, [setKeyword]);
+  const inputKeyword = useCallback(
+    (event) => {
+      setKeyword(event.target.value);
+    },
+    [setKeyword]
+  );
 
   const selectMenu = (event, path) => {
     dispatch(push(path));
     props.onClose(event);
-  }
+  };
 
   const [filters, setFilters] = useState([
-    {func: selectMenu, label: "すべて",    id: "all", value: "/"},
-    {func: selectMenu, label: "メンズ",    id: "male", value: "/?gender=male"},
-    {func: selectMenu, label: "レディース",    id: "female", value: "/?gender=female"},
+    { func: selectMenu, label: "すべて", id: "all", value: "/" },
+    { func: selectMenu, label: "メンズ", id: "male", value: "/?gender=male" },
+    {
+      func: selectMenu,
+      label: "レディース",
+      id: "female",
+      value: "/?gender=female",
+    },
   ]);
 
-  
   const menus = [
-    {func: selectMenu, label: "商品登録",    icon: <AddCirclreIcon />, id: "register", value: "/product/edit"},
-    {func: selectMenu, label: "注文履歴",    icon: <HistoryIcon />,    id: "history",  value: "/order/history"},
-    {func: selectMenu, label: "プロフィール", icon: <PersonIcon />,     id: "profile",  value: "user/mypage"},
-  ]
-  
+    {
+      func: selectMenu,
+      label: "商品登録",
+      icon: <AddCirclreIcon />,
+      id: "register",
+      value: "/product/edit",
+    },
+    {
+      func: selectMenu,
+      label: "注文履歴",
+      icon: <HistoryIcon />,
+      id: "history",
+      value: "/order/history",
+    },
+    {
+      func: selectMenu,
+      label: "プロフィール",
+      icon: <PersonIcon />,
+      id: "profile",
+      value: "user/mypage",
+    },
+  ];
+
   useEffect(() => {
-    db.collection('categories')
-    .orderBy('order', 'asc')
-    .get()
-    .then(snapshots => {
-      const list = []
-      snapshots.forEach(snapshot => {
-        const category = snapshot.data()
-        list.push({func: selectMenu, label: category.name,    id: category.id, value: `/?category=${category.id}`})
-      })
-      setFilters(prevState => [...prevState, ...list])
-    })
-  }, [])
+    db.collection("categories")
+      .orderBy("order", "asc")
+      .get()
+      .then((snapshots) => {
+        const list = [];
+        snapshots.forEach((snapshot) => {
+          const category = snapshot.data();
+          list.push({
+            func: selectMenu,
+            label: category.name,
+            id: category.id,
+            value: `/?category=${category.id}`,
+          });
+        });
+        setFilters((prevState) => [...prevState, ...list]);
+      });
+  }, []);
+  console.log(filters);
 
   return (
     <nav className={classes.drawer}>
@@ -89,8 +118,8 @@ const ClosableDrawer = (props) => {
         anchor="right"
         open={props.open}
         onClose={(e) => props.onClose(e)} //callback:eventの引数を受け取って、propsで渡ってきたonCloseの関数にeventを渡す
-        classes={{paper: classes.drawerPaper}}
-        ModalProps={{keepMounted: true}}
+        classes={{ paper: classes.drawerPaper }}
+        ModalProps={{ keepMounted: true }}
       >
         <div
           onClose={(e) => props.onClose(e)} //ドロワ−メニュ−を閉じるため
@@ -98,8 +127,14 @@ const ClosableDrawer = (props) => {
         >
           <div className={classes.searchField}>
             <TextInput
-              fullWidth={false} label={"キーワードを入力"} nultiline={false}
-              onChange={inputKeyword} required={false} rows={1} value={keyword} type={"text"}
+              fullWidth={false}
+              label={"キーワードを入力"}
+              nultiline={false}
+              onChange={inputKeyword}
+              required={false}
+              rows={1}
+              value={keyword}
+              type={"text"}
             />
             <IconButton>
               <SearchIcon />
@@ -107,11 +142,13 @@ const ClosableDrawer = (props) => {
           </div>
           <Divider />
           <List>
-            {menus.map(menu => (
-              <ListItem button key={menu.id} onClick={(e) => menu.func(e, menu.value)}>
-                <ListItemIcon>
-                  {menu.icon}
-                </ListItemIcon>
+            {menus.map((menu) => (
+              <ListItem
+                button
+                key={menu.id}
+                onClick={(e) => menu.func(e, menu.value)}
+              >
+                <ListItemIcon>{menu.icon}</ListItemIcon>
                 <ListItemText primary={menu.label} />
               </ListItem>
             ))}
@@ -124,20 +161,20 @@ const ClosableDrawer = (props) => {
           </List>
           <Divider />
           <List>
-            {filters.map(filter => (
-            <ListItem
-              button
-              key={filter.id}
-              onClick={(e) => filter.func(e, filter.value)}
-            >
-              <ListItemText primary={filter.label} />
-            </ListItem>
+            {filters.map((filter) => (
+              <ListItem
+                button
+                key={filter.id}
+                onClick={(e) => filter.func(e, filter.value)}
+              >
+                <ListItemText primary={filter.label} />
+              </ListItem>
             ))}
           </List>
         </div>
       </Drawer>
     </nav>
-  )
-}
+  );
+};
 
 export default ClosableDrawer;
